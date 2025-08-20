@@ -1,29 +1,18 @@
 const express = require('express');
 const app = express();
+const {adminAuth,userAuth} = require('./utils/auth.js')
 
 app.listen(3000 , () => {
   console.log('server is up')
 });
-app.use("/user",
-  (req,res,next) => {
-  console.log("route handler 1");
-  next();
-  // res.send('response 1')
-  },
+app.use("/user",userAuth,);
 
-  (req,res,next) => {
-    console.log("route handler 2")
-    next();
-    // res.send("response 2")
-  },
-  (req,res,next) => {
-    console.log("route handler 3")
-    next();
-    // res.send("response 3")
-  },
-  (req,res,next) => {
-    console.log("route handler 4")
-    next();
-    res.send("response 4")
-  }
-);
+app.get('/user/data', (req,res) => {
+  res.send('recieved all user data')
+})
+
+app.use("/admin",adminAuth);
+
+app.get("/admin/getdata",(req,res) => {
+  res.send("recieved all admin data")
+});
