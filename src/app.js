@@ -16,3 +16,9 @@ app.use("/admin",adminAuth);
 app.get("/admin/getdata",(req,res) => {
   res.send("recieved all admin data")
 });
+
+app.use('/',(err,req,res,next)=>{
+  if(err) {
+    res.status(500).send('something went wrong')
+  }
+})
