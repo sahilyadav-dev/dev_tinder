@@ -1,24 +1,27 @@
 const express = require('express');
 const app = express();
-const {adminAuth,userAuth} = require('./utils/auth.js')
+connect = require("./config/database.js")
+userModel = require("./models/user.js")
 
-app.listen(3000 , () => {
-  console.log('server is up')
-});
-app.use("/user",userAuth,);
+app.use(express.json())
+connect()
+  .then( () => {
+    console.log('connection to database is sucessfull');
+    app.listen(3000 , () => {console.log('server is up')})
+  })
+  .catch((err) => {
+    console.error('failed')
+  });
 
-app.get('/user/data', (req,res) => {
-  res.send('recieved all user data')
-})
+app.post("/signup", async (req,res) => {
 
-app.use("/admin",adminAuth);
-
-app.get("/admin/getdata",(req,res) => {
-  res.send("recieved all admin data")
-});
-
-app.use('/',(err,req,res,next)=>{
-  if(err) {
-    res.status(500).send('something went wrong')
+  const user = new userModel(req.body)
+    
+  try {
+    await user.save();
+    res.send('user data saved')
+  }
+  catch (err){
+    res.status(500).send('error accured in saving data:' + err.message)
   }
 })
