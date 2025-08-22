@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 connect = require("./config/database.js")
-userModel = require("./models/user.js")
+User = require("./models/user.js")
 
 app.use(express.json())
 connect()
@@ -15,7 +15,7 @@ connect()
 
 app.post("/signup", async (req,res) => {
 
-  const user = new userModel(req.body)
+  const user = new User(req.body)
     
   try {
     await user.save();
@@ -23,5 +23,31 @@ app.post("/signup", async (req,res) => {
   }
   catch (err){
     res.status(500).send('error accured in saving data:' + err.message)
+  }
+});
+
+app.get('/user', async (req,res) => {
+  const userEmail = req.body.emailId;
+  console.log(userEmail)
+  
+  try {
+    const user = await User.find({emailId : userEmail})
+    res.send(user)
+  }
+  catch (err){
+    res.status(400).send('error accured in saving data:' + err.message)
+  }
+ 
+})
+
+app.get("/feed",async (req,res) => {
+  
+
+  try{
+    const users = await User.find({})
+    res.send(users);
+  } 
+  catch (err) {
+    res.status(400).send('not found')
   }
 })
