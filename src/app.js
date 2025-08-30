@@ -29,10 +29,16 @@ app.post("/signup", async (req,res) => {
 app.patch('/user/update',async (req,res) => {
   const id = req.body._id
   const data = req.body
-  console.log(id)
-
+  
   try{
+    // const allowedUpdate = ["firstName","lastName","age","gender"];
+    // const isAllowedUpdate = Object.keys(data).every((k) => allowedUpdate.includes(k));
+    // if(!isAllowedUpdate) {
+    //   throw new Error('update not allowed');
+    // }
     const user = await User.findByIdAndUpdate(id,data,{runValidators: true});
+
+    console.log(user)
     res.send('user updated');
   }
   catch (err){
