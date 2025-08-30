@@ -28,10 +28,11 @@ app.post("/signup", async (req,res) => {
 
 app.patch('/user/update',async (req,res) => {
   const id = req.body._id
+  const data = req.body
   console.log(id)
 
   try{
-    const user = await User.findByIdAndUpdate(id,{lastName: 'rakuuuuuu'},{firstName: 'raku'});
+    const user = await User.findByIdAndUpdate(id,data,{runValidators: true});
     res.send('user updated');
   }
   catch (err){
