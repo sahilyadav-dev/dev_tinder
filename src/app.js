@@ -14,15 +14,15 @@ connect()
   });
 
 app.post("/signup", async (req,res) => {
-
-  const user = new User(req.body)
     
+    const user = new User(req.body)
+
   try {
     await user.save();
     res.send('user data saved')
   }
   catch (err){
-    res.status(500).send('error accured in saving data:' + err.message)
+    res.status(500).send('ERROR : ' + err.message)
   }
 });
 

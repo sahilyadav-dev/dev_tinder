@@ -4,38 +4,39 @@ const validator = require("validator")
 const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    minlength: 4,
-    maxlength: 20,
-    required: true,
+    minlength: [4,'firstname should be greater than 4 leters'],
+    maxlength: [20,'first should not exced 20 leters'],
+    required: [true,'firstname required']
   },
   lastName: {
     type: String,
-    minlength: 4,
-    maxlength: 20,
-    required: true,
+    minlength: [4,'firstname should be greater than 4 leters'],
+    maxlength: [20,'first should not exced 20 leters'],
+    required: [true,'lastname required']
   },
   emailId: {
     type: String,
-    required: true,
-    lowercase: true,
+    required: [true,'email id required'],
+    lowercase: [true,'all letter should be lowercase'],
     trim: true,
-    unique: true,
-    validate(value){
+    unique: [true,"email id already exist"],
+    validate(value) {
       if(!validator.isEmail(value)) {
-        throw new Error('email is invalid')
+        throw new Error('enter valid email id')
       }
     }
+    
   },
   password: {
     type: String,
-    minlength: 8,
-    maxlength: 120,
-    required: true,
-    // validate(value) {
-    //   if(!validator.isStrongPassword(value)) {
-    //     throw new Error("input strong password")
-    //   }
-    // }
+    minlength: [8,'must have atleast 8 digits'],
+    maxlength: [120,'max length reached'],
+    required: [true,'required'],
+    validate(value) {
+      if(!validator.isStrongPassword(value)) {
+        throw new Error("input strong password")
+      }
+    }
   },
   age: {
     type: Number,
