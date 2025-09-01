@@ -17,39 +17,41 @@ const validateSignupData = (req) => {
       
 }
 
-const req = {
-  password: 'sahil',
-  emailId: 'sfasdfadf'
+// const req = {
+//   password: 'sahil',
+//   emailId: 'sfasdfadf'
 
-}
+// }
 
-const validateUpdateData = function(req) {
-  const updates = {} 
+// const validateUpdateData = function(req) {
+//   const updates = {} 
 
-  if(req.password){
-    updates.password = req.password
-  }
-  if(req.emailId){
-    updates.emailId = req.emailId
-  }
-  if(req.gender){
-    updates.gender = req.gender
-  }
-  if(req.photoUrl){
-    updates.photoUrl = req.photoUrl
-  }
-  if(req.skills){
-    updates.skills = req.skills
-  }
+//   if(req.password){
+//     updates.password = req.password
+//   }
+//   if(req.emailId){
+//     updates.emailId = req.emailId
+//   }
+//   if(req.gender){
+//     updates.gender = req.gender
+//   }
+//   if(req.photoUrl){
+//     updates.photoUrl = req.photoUrl
+//   }
+//   if(req.skills){
+//     updates.skills = req.skills
+//   }
 
   
-  return updates
-}
-const data = validateUpdateData(req)
+//   return updates
+// }
+// const data = validateUpdateData(req)
 
 
 
-if (!validator.isEmail(data.emailId)) {
+// if (!validator.isEmail(data.emailId)) {
   
-}
-module.exports = {validateSignupData,validateUpdateData}
+// }
+
+
+module.exports = {validateSignupData}
