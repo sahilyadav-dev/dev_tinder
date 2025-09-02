@@ -1,83 +1,30 @@
 const express = require('express');
 const connect = require("./config/database.js");
 const User = require("./models/user.js");
-const {validateSignupData} = require('./utils/validation.js');
-const bcrypt = require('bcrypt');
 const cookieParse = require('cookie-parser');
-const jwt = require('jsonwebtoken')
-const {userAuth} = require('./utils/auth.js')
-
 const app = express();
+
+const authRouter = require('./routes/auth.js')
+const profileRouter = require('./routes/profile.js')
+const requestRouter = require('./routes/request.js')
 
 app.use(express.json());
 app.use(cookieParse());
 connect()
-  .then( () => {
-    console.log('connection to database is sucessfull');
-    app.listen(3000 , () => {console.log('server is up')})
-  })
-  .catch((err) => {
-    console.error('failed')
-  });
-
-app.post("/signup", async (req,res) => { 
-  try {
-
-    validateSignupData(req)
-    const {firstName,lastName,emailId,password,age,gender,skills,photoUrl,about} = req.body
-
-    const hashPassword = await bcrypt.hash(password,10,)
-    
-    const user = new User({
-      firstName,lastName,emailId,password: hashPassword,age,gender,skills,photoUrl,about
-    });
-    await user.save();
-    res.send('user data saved')
-  }
-  catch (err){
-    res.status(500).send('ERROR : ' + err.message)
-  }
+.then( () => {
+  console.log('connection to database is sucessfull');
+  app.listen(3000 , () => {console.log('server is up')})
+})
+.catch((err) => {
+  console.error('failed')
 });
 
-app.get('/profile', userAuth ,async (req,res) => {
-  try{
-  
-  
-  const user = req.user
 
-  
-  res.send(user)
+app.use('/', authRouter);
+app.use('/', profileRouter);
+app.use('/', requestRouter);
 
-  }
-  catch (err) {
-    res.status(400).send('ERROR : '+ err.message)
-  }
-})
 
-app.get('/login',async (req,res) => {
-  try{
-  const {emailId,password} = req.body;
-  
-    const user = await User.findOne({emailId: emailId})
-
-    if(!user) {
-      throw new Error('no user found')
-    }
-
-    const isPasswordValid = await user.validatePassword(password);;
-    
-    if(isPasswordValid) {
-      const token = await user.getJWT()
-      res.cookie('token',token);
-      res.send('login sucessfull');
-    }else{
-      throw new Error('invalid email and password')
-    }
-  }
-  catch (err){
-    res.status(400).send('ERROR : ' + err.message)
-  }
-})
 
 app.patch('/user/update',async (req,res) => {
   const id = req.body._id
