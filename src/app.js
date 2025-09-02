@@ -1,11 +1,16 @@
 const express = require('express');
-const app = express();
-connect = require("./config/database.js")
-User = require("./models/user.js")
-const {validateSignupData} = require('./utils/validation.js')
-bcrypt = require('bcrypt')
+const connect = require("./config/database.js");
+const User = require("./models/user.js");
+const {validateSignupData} = require('./utils/validation.js');
+const bcrypt = require('bcrypt');
+const cookieParse = require('cookie-parser');
+const jwt = require('jsonwebtoken')
+const {userAuth} = require('./utils/auth.js')
 
-app.use(express.json())
+const app = express();
+
+app.use(express.json());
+app.use(cookieParse());
 connect()
   .then( () => {
     console.log('connection to database is sucessfull');
@@ -34,6 +39,21 @@ app.post("/signup", async (req,res) => {
   }
 });
 
+app.get('/profile', userAuth ,async (req,res) => {
+  try{
+  
+  
+  const user = req.user
+
+  
+  res.send(user)
+
+  }
+  catch (err) {
+    res.status(400).send('ERROR : '+ err.message)
+  }
+})
+
 app.get('/login',async (req,res) => {
   try{
   const {emailId,password} = req.body;
@@ -44,11 +64,12 @@ app.get('/login',async (req,res) => {
       throw new Error('no user found')
     }
 
-    console.log(user.password)
-    const comparison = await bcrypt.compare(password,user.password);
+    const isPasswordValid = await user.validatePassword(password);;
     
-      if(comparison) {
-      res.send('login sucessfull')
+    if(isPasswordValid) {
+      const token = await user.getJWT()
+      res.cookie('token',token);
+      res.send('login sucessfull');
     }else{
       throw new Error('invalid email and password')
     }
