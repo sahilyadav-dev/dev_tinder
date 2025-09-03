@@ -1,7 +1,7 @@
 const validator = require('validator')
 
 const validateSignupData = (req) => {
-  const {password,emailId,gender,photoUrl,skills} = req.body
+  const {firstName,lastName,password,emailId,age,gender,photoUrl,skills} = req.body
   
   if(!validator.isStrongPassword(password)) {
     throw new Error("weak password")
@@ -13,45 +13,15 @@ const validateSignupData = (req) => {
     throw new Error("invalid url")
   }else if(skills.length>10) {
     throw new Error("cannot add more than 10 skills")
-  }
-      
+  }   
 }
 
-// const req = {
-//   password: 'sahil',
-//   emailId: 'sfasdfadf'
-
-// }
-
-// const validateUpdateData = function(req) {
-//   const updates = {} 
-
-//   if(req.password){
-//     updates.password = req.password
-//   }
-//   if(req.emailId){
-//     updates.emailId = req.emailId
-//   }
-//   if(req.gender){
-//     updates.gender = req.gender
-//   }
-//   if(req.photoUrl){
-//     updates.photoUrl = req.photoUrl
-//   }
-//   if(req.skills){
-//     updates.skills = req.skills
-//   }
-
+const validateEditRequestData = (req) => {
+  const allowedEditField = ['firstName','lastName','emailId','password','age','gender','photoUrl','skills'];
   
-//   return updates
-// }
-// const data = validateUpdateData(req)
-
-
-
-// if (!validator.isEmail(data.emailId)) {
+  const isEditAllowed = Object.keys(req.body).every((field) => allowedEditField.includes(field))
   
-// }
+  return isEditAllowed;
+}
 
-
-module.exports = {validateSignupData}
+module.exports = {validateSignupData,validateEditRequestData}

@@ -1,16 +1,7 @@
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
-// const adminAuth = (req,res,next) => {
-//   console.log("checking authorisation")
-//   const token = 'xyz';
-//   const isAuthorised = 'xyz'
-//   if(isAuthorised === token) {
-//     next();
-//   } else {
-//     res.status(401).send('not authorised');
-//   }
-// };
+
 
 const userAuth = async (req,res,next) => {
   try{

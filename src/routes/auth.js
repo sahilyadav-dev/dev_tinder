@@ -50,4 +50,9 @@ authRouter.get('/login',async (req,res) => {
   }
 })
 
+authRouter.patch('/logout', async (req,res) => {
+  res.clearCookie('token')
+  res.send('Logged out Successfull')
+})
+
 module.exports = authRouter
