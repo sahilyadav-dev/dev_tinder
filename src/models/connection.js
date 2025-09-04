@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator')
+
 
 const ConnectionSchema = new mongoose.Schema({
   fromUserId: {
@@ -21,6 +21,14 @@ const ConnectionSchema = new mongoose.Schema({
 },
 {
   timestamps: true
+})
+
+ConnectionSchema.pre('save', function () {
+  const connectionRequest = this;
+
+  if(connectionRequest.fromUserId.equals(connectionRequest.toUserId)) {
+    throw new Error('cannot send request to yourself')
+  }
 })
 
 module.exports = mongoose.model('Connection',ConnectionSchema);
