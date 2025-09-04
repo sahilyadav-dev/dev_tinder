@@ -1,7 +1,7 @@
 const express = require('express')
 const authRouter = express.Router();
 const {validateSignupData} = require('../utils/validation')
-const {bcrypt} = require('bcrypt')
+const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
 
