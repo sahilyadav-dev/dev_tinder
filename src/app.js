@@ -7,7 +7,7 @@ const app = express();
 const authRouter = require('./routes/auth.js')
 const profileRouter = require('./routes/profile.js')
 const requestRouter = require('./routes/request.js')
-
+const userRouter = require('./routes/user.js')
 app.use(express.json());
 app.use(cookieParse());
 connect()
@@ -23,7 +23,7 @@ connect()
 app.use('/', authRouter);
 app.use('/', profileRouter);
 app.use('/', requestRouter);
-
+app.use('/',userRouter)
 
 
 app.patch('/user/update',async (req,res) => {
