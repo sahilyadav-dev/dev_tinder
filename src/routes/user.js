@@ -59,6 +59,44 @@ userRouter.get('/user/connection', userAuth ,async (req,res) => {
   
 });
 
+userRouter.get('/user/feed', userAuth ,async  (req,res) => {
+  try{
+    const user = req.user; 
+    
+    const page = req.query.page || 1;
+    let limit = req.query.limit || 10;
+    limit = limit>50? 50 : limit;
+
+    const skip = (page-1)*limit;
+
+    const connectedUsers = await Connection.find({
+      $or:[
+        {fromUserId: user._id},
+        {toUserId: user._id}
+      ]
+    }).select('fromUserId toUserId');
+    
+    const hideUserFromFeed = new Set ()
+    hideUserFromFeed.add(user._id.toString())
+    connectedUsers.forEach( (value) => {
+      hideUserFromFeed.add(value.fromUserId.toString())
+      hideUserFromFeed.add(value.toUserId.toString())
+    })
+
+    const users = await User.find({_id: { $nin: Array.from(hideUserFromFeed)}})
+    .select(['firstName','lastName','age','gender','skills','photoUrl','about'])
+    .limit(limit)
+    .skip(skip)
+
+    res.json({
+      message: 'this is your feed',
+      data :users})
+  } catch (err) {
+    res.status(400).send('ERROR : '+ err.message);
+  }
+  
+
+});
 
 
 module.exports = userRouter
