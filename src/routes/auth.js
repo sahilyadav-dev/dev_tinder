@@ -25,7 +25,7 @@ authRouter.post("/signup", async (req,res) => {
   }
 });
 
-authRouter.get('/login',async (req,res) => {
+authRouter.post('/login',async (req,res) => {
   try{
   const {emailId,password} = req.body;
   
@@ -40,7 +40,7 @@ authRouter.get('/login',async (req,res) => {
     if(isPasswordValid) {
       const token = await user.getJWT()
       res.cookie('token',token);
-      res.send('login sucessfull');
+      res.send(user);
     }else{
       throw new Error('invalid email and password')
     }
