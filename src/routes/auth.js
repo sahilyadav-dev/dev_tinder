@@ -42,17 +42,19 @@ authRouter.post('/login',async (req,res) => {
       res.cookie('token',token);
       res.send(user);
     }else{
-      throw new Error('invalid email and password')
+      throw new Error('Invalid Email and Password')
     }
   }
   catch (err){
-    res.status(400).send('ERROR : ' + err.message)
+    res.status(401).send('ERROR : ' + err.message)
   }
 })
 
-authRouter.patch('/logout', async (req,res) => {
+authRouter.post('/logout', async (req,res) => {
   res.clearCookie('token')
-  res.send('Logged out Successfull')
+  res.json({
+    message: 'Logged out Successfull'
+  })
 })
 
 module.exports = authRouter
